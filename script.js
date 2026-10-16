@@ -288,8 +288,8 @@
   }
 
   /* ------------------------------------------------------------------
-     Datos de ejemplo de una familia: inscripcion, dos mensualidades
-     y uniforme. Suman $340.000, igual que el panel delunks.
+     Datos de ejemplo de una familia: inscripcion, tres mensualidades
+     y uniforme. La mensualidad usa el valor real de $25.000.
   ------------------------------------------------------------------ */
   function buildDemoPayments(email) {
     /* Se vary slight para que no se vean todas las familias iguales */
@@ -299,7 +299,8 @@
                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     var abrev = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN",
                  "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"];
-    var cuota = 85000 + (semilla % 3) * 5000;
+    /* Mensualidad real del club */
+    var cuota = 25000;
     var uniforme = 120000 + (semilla % 2) * 10000;
     var primero = 7 + (semilla % 3);
 
