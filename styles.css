@@ -26,6 +26,16 @@
 
 * { box-sizing: border-box; }
 
+/* Si algo se sale de ancho, la pagina se desplaza en vez de cortarse */
+html, body { max-width: 100%; overflow-x: hidden; }
+
+/* Los textos largos deben poder partirse, nunca empujar la pagina */
+p, h1, h2, h3, h4, li, span, small, strong, a, label {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+img, svg, video { max-width: 100%; }
+
 html { scroll-behavior: smooth; scroll-padding-top: 92px; }
 
 body {
@@ -254,6 +264,8 @@ a { color: inherit; }
   gap: 60px;
   align-items: center;
 }
+/* Sin esto, un hijo ancho estira la columna y la pagina se desborda */
+.hero-grid > * { min-width: 0; }
 .hero h1 {
   font-family: var(--font-head);
   font-size: clamp(38px, 5.2vw, 64px);
@@ -372,6 +384,31 @@ a { color: inherit; }
 
 /* ============ Secciones generales ============ */
 .section { padding: 96px 0; }
+
+/* Regla general: en cualquier rejilla, los hijos pueden encogerse.
+   Sin esto, un elemento ancho estira la columna y desborda la pantalla. */
+.hero-grid > *,
+.about-grid > *,
+.beliefs-grid > *,
+.category-grid > *,
+.schedule-layout > *,
+.schedule-selector > *,
+.schedule-detail > *,
+.news-grid > *,
+.news-card > *,
+.gallery-grid > *,
+.gallery-tile > *,
+.contact-grid > *,
+.contact-list > *,
+.contact-form-wrap > *,
+.portal-grid > *,
+.portal-copy > *,
+.preview-window-body > *,
+.preview-content > *,
+.preview-stats > *,
+.dashboard-summary > *,
+.admin-stats > *,
+.admin-item > * { min-width: 0; }
 
 .section-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; margin-bottom: 52px; }
 .section-heading h2 {
@@ -1308,6 +1345,39 @@ a.contact-item:hover .contact-arrow { transform: translateX(4px); color: var(--o
   color: var(--orange);
 }
 
+/* Acceso de la coordinacion: entrada facil al panel completo */
+.coord-access { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--light-line); }
+.coord-toggle {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--light-soft);
+  border: 1px solid var(--light-line);
+  border-radius: 14px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.coord-toggle:hover { background: var(--orange-soft); border-color: var(--orange); }
+.coord-toggle .icon { color: var(--orange); }
+.coord-toggle span { flex: 1; text-align: left; }
+.coord-chevron { transition: transform 0.25s ease; }
+.coord-toggle[aria-expanded="true"] .coord-chevron { transform: rotate(180deg); }
+
+.coord-box { margin-top: 14px; padding: 18px; background: #fff8ef; border: 1.5px solid var(--orange); border-radius: 16px; }
+.coord-box > p { margin: 0 0 14px; font-size: 13.5px; line-height: 1.5; color: var(--ink); }
+.coord-creds { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.coord-creds > div { padding: 11px 13px; background: var(--white); border: 1px solid var(--light-line); border-radius: 12px; }
+.coord-creds small { display: block; margin-bottom: 3px; color: var(--muted); font-size: 11px; }
+.coord-creds strong { display: block; font-size: 13px; word-break: break-all; }
+.coord-box .button { width: 100%; justify-content: center; }
+.coord-note { margin: 12px 0 0 !important; font-size: 11.5px !important; color: var(--muted) !important; }
+
 .dashboard-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
 .dashboard-head h2 { margin: 0 0 4px; font-size: 25px; }
 .dashboard-user { margin: 0; color: var(--muted); font-size: 13px; }
@@ -1415,7 +1485,17 @@ a.contact-item:hover .contact-arrow { transform: translateX(4px); color: var(--o
   border-radius: var(--radius-sm);
 }
 .admin-stats small { display: block; margin-bottom: 5px; color: var(--muted); font-size: 11.5px; }
-.admin-stats strong { display: block; font-family: var(--font-head); font-size: 19px; line-height: 1.1; }
+.admin-stats strong {
+  display: block;
+  font-family: var(--font-head);
+  font-size: 19px;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+/* Los montos largos necesitan mas espacio: se achican un poco */
+.admin-stats > div { min-width: 0; }
 
 .admin-list { display: flex; flex-direction: column; }
 .admin-item { border-top: 1px solid var(--light-line); }
@@ -1705,6 +1785,8 @@ a.contact-item:hover .contact-arrow { transform: translateX(4px); color: var(--o
   .schedule-layout { grid-template-columns: 1fr; }
   .dashboard-summary { grid-template-columns: 1fr; }
   .admin-stats { grid-template-columns: repeat(2, 1fr); }
+  .admin-stats strong { font-size: 17px; }
+  .category-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 860px) {
@@ -1739,6 +1821,8 @@ a.contact-item:hover .contact-arrow { transform: translateX(4px); color: var(--o
 @media (max-width: 620px) {
   .section { padding: 60px 0; }
   .news-grid { grid-template-columns: 1fr; }
+  .category-grid { grid-template-columns: 1fr; gap: 16px; }
+  .category-card { min-height: 0; padding: 22px; }
   .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 200px; }
   .gallery-tile--large,
   .gallery-tile--wide { grid-column: span 1; }
@@ -1755,6 +1839,25 @@ a.contact-item:hover .contact-arrow { transform: translateX(4px); color: var(--o
   .footer-top { flex-direction: column; align-items: flex-start; }
   .lightbox { padding: 18px; }
   .lightbox-content img { max-height: 70vh; }
+
+  /* Barra superior: en celular se apila */
+  .topbar-inner { flex-direction: column; align-items: flex-start; gap: 4px; text-align: left; }
+
+  /* Etiqueta del hero: se parte en varias lineas */
+  .hero .eyebrow { white-space: normal; line-height: 1.5; }
+  .hero-actions { gap: 14px; }
+  .hero-actions .button { width: 100%; justify-content: center; }
+  .hero-actions .text-link { width: 100%; justify-content: center; }
+
+  /* Botones que no caben en una linea */
+  .button { max-width: 100%; }
+  .modal { padding: 14px; }
+  .modal-dialog { padding: 28px 18px; }
+  .contact-item strong { font-size: 13.5px; }
+  .schedule-session-day { font-size: 15.5px; }
+  .schedule-session-hour { font-size: 13.5px; white-space: normal; }
+  .admin-stats { grid-template-columns: 1fr; }
+  .admin-reset-clave { font-size: 24px; letter-spacing: 0.08em; }
 }
 
 @media (max-width: 420px) {

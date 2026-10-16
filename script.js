@@ -391,6 +391,7 @@
 
   function renderAdmin() {
     if (!adminStats || !adminList) return;
+    ensureAdmin();
 
     var todos = getUsers();
     var familias = todos.filter(function (u) { return u.role !== "admin"; });
@@ -812,6 +813,7 @@
       }
 
       var normalized = normalizeEmail(user.value);
+      ensureAdmin();
       var match = getUsers().find(function (u) {
         return u.email === normalized && u.pass === hashPassword(pass.value);
       });
@@ -837,6 +839,8 @@
   var ADMIN_EMAIL = "coordinacion@clubvoleibol.com";
   var ADMIN_PASS = "cvp2026";
 
+  /* Se ejecuta antes de leer las cuentas, para que el acceso de
+     coordinacion siempre exista aunque se haya limpiado el navegador */
   function ensureAdmin() {
     var users = getUsers();
     var yaExiste = users.some(function (u) {
@@ -853,7 +857,6 @@
     });
     saveUsers(users);
   }
-  ensureAdmin();
 
   /* ------------------------------------------------------------------
      Crear una cuenta de coordinacion desde el panel
@@ -910,6 +913,36 @@
         "Acceso creado para " + nombre.value.trim() + ". Ya puede entrar al panel.",
         "is-success");
       renderAdmin();
+    });
+  }
+
+  /* ------------------------------------------------------------------
+     Entrada rapida para la coordinacion del club
+  ------------------------------------------------------------------ */
+  var coordToggle = $("#coord-toggle");
+  var coordBox = $("#coord-box");
+  var coordFill = $("#coord-fill");
+
+  if (coordToggle && coordBox) {
+    coordToggle.addEventListener("click", function () {
+      var abierto = coordToggle.getAttribute("aria-expanded") === "true";
+      coordToggle.setAttribute("aria-expanded", abierto ? "false" : "true");
+      coordBox.hidden = abierto;
+    });
+  }
+
+  if (coordFill) {
+    coordFill.addEventListener("click", function () {
+      var usuario = $("#portal-user");
+      var clave = $("#portal-password");
+      if (usuario) usuario.value = "coordinacion@clubvoleibol.com";
+      if (clave) {
+        clave.value = "cvp2026";
+        clave.type = "text";
+        var botonMostrar = $("#password-toggle");
+        if (botonMostrar) botonMostrar.textContent = "Ocultar";
+      }
+      if (usuario) usuario.focus();
     });
   }
 
