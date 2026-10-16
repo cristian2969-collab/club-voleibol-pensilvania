@@ -1,0 +1,17 @@
+# Documentos internos de trabajo: NO se publican
+# La hoja de contexto es el cuaderno de trabajo del proyecto.
+CONTEXTO.md
+
+# Ficha interna de datos del club
+INFORMACION_COMPLETA_PROYECTO.txt
+
+# Sistema operativo
+Thumbs.db
+desktop.ini
+.DS_Store
+$RECYCLE.BIN/
+
+# Editores
+.vscode/
+.idea/
+*.swp
