@@ -318,7 +318,7 @@
     var m3 = cuotaMes(2);
 
     return [
-      { concept: "Inscripción 2026", date: "15 ENE 2026", type: "Inscripción", amount: 50000, status: "Pagada" },
+      { concept: "Inscripción 2026", date: "15 ENE 2026", type: "Inscripción", amount: 25000, status: "Pagada" },
       { concept: "Uniforme 2026", date: "10 FEB 2026", type: "Materiales", amount: uniforme, status: "Pagada" },
       { concept: m1.nombre + " " + m1.anio, date: "05 " + m1.abrev + " " + m1.anio, type: "Mensualidad", amount: cuota, status: "Pagada" },
       { concept: m2.nombre + " " + m2.anio, date: "05 " + m2.abrev + " " + m2.anio, type: "Mensualidad", amount: cuota, status: "Pagada" },
