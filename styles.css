@@ -545,6 +545,161 @@ a { color: inherit; }
 .belief-card--coral .belief-icon { background: rgba(255, 255, 255, 0.24); color: var(--white); }
 .belief-card--coral > p:not(.eyebrow) { color: rgba(255, 255, 255, 0.95); }
 
+/* ============ Nuestra historia ============ */
+.history-section { background: var(--white); color: var(--ink); }
+.history-heading h2 span { color: var(--orange); }
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+
+/* Linea vertical que une los hitos */
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 52px;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--orange), rgba(255, 122, 26, 0.15));
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 104px 1fr;
+  gap: 26px;
+  position: relative;
+  padding-bottom: 34px;
+}
+.timeline-item:last-child { padding-bottom: 0; }
+
+.timeline-marker { position: relative; z-index: 1; }
+.timeline-marker span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 104px;
+  height: 44px;
+  border-radius: 999px;
+  background: var(--blue-900);
+  color: var(--white);
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  border: 3px solid var(--white);
+  box-shadow: 0 0 0 2px var(--orange);
+}
+
+.timeline-body {
+  background: var(--light-soft);
+  border: 1px solid var(--light-line);
+  border-radius: var(--radius);
+  padding: 28px 30px;
+}
+.timeline-item--highlight .timeline-marker span {
+  background: var(--orange);
+  color: var(--blue-900);
+  box-shadow: 0 0 0 2px var(--orange);
+}
+.timeline-item--highlight .timeline-body {
+  background: var(--orange-soft);
+  border-color: rgba(255, 122, 26, 0.4);
+}
+
+.timeline-body h3 {
+  margin: 0 0 12px;
+  font-family: var(--font-head);
+  font-size: 23px;
+  line-height: 1.2;
+}
+.timeline-body > p {
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 15.5px;
+  line-height: 1.65;
+}
+
+.timeline-points { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+.timeline-points li { color: var(--muted); font-size: 14.5px; line-height: 1.55; }
+.timeline-points strong { color: var(--ink); }
+.timeline-points em { font-style: italic; }
+
+/* Fotos de la historia */
+.history-photo { margin: 20px 0 0; }
+.history-photo img {
+  width: 100%;
+  border-radius: 14px;
+  display: block;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+.history-photo figcaption {
+  margin-top: 9px;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+/* Cifras destacadas */
+.history-numbers {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 48px;
+}
+.history-numbers > div {
+  background: var(--blue-900);
+  border-radius: var(--radius);
+  padding: 26px 22px;
+  text-align: center;
+}
+.history-numbers strong {
+  display: block;
+  font-family: var(--font-head);
+  font-size: 40px;
+  line-height: 1;
+  color: var(--orange);
+  margin-bottom: 8px;
+}
+.history-numbers small {
+  display: block;
+  color: var(--muted-light);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.history-quote {
+  margin: 34px 0 0;
+  padding: 22px 28px;
+  border-left: 3px solid var(--orange);
+  background: var(--light-soft);
+  border-radius: 0 16px 16px 0;
+  color: var(--ink);
+  font-size: 16px;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .timeline::before { left: 34px; }
+  .timeline-item { grid-template-columns: 68px 1fr; gap: 16px; }
+  .timeline-marker span { width: 68px; height: 38px; font-size: 13.5px; }
+  .timeline-body { padding: 22px 20px; }
+  .timeline-body h3 { font-size: 20px; }
+  .history-numbers { grid-template-columns: repeat(2, 1fr); }
+  .history-numbers strong { font-size: 34px; }
+}
+
+@media (max-width: 620px) {
+  .history-numbers { grid-template-columns: 1fr; gap: 12px; }
+  .history-numbers > div { padding: 20px; }
+  .history-quote { padding: 18px 20px; font-size: 15px; }
+  .history-photo img { aspect-ratio: 4 / 3; }
+}
+
 /* ============ Categorías ============ */
 .categories-section { background: var(--blue-900); color: var(--white); }
 .categories-heading h2 span { color: var(--orange); }
