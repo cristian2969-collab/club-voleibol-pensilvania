@@ -1551,6 +1551,18 @@ a.contact-item:hover .contact-arrow { transform: translateX(4px); color: var(--o
 .admin-item-total { margin: 10px 0 0; color: var(--muted); font-size: 12.5px; font-weight: 600; }
 .admin-empty { margin: 8px 0 0; color: var(--muted); font-size: 13.5px; }
 
+/* Respaldo de cuentas */
+.admin-backup { background: var(--light-soft); border-color: var(--orange); }
+.admin-backup-note { margin: 0 0 14px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.admin-backup-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.admin-backup-actions .button { flex: 1; min-width: 170px; justify-content: center; }
+.button--outline-dark {
+  background: transparent;
+  color: var(--blue-900);
+  border: 1.5px solid var(--blue-900);
+}
+.button--outline-dark:hover { background: var(--blue-900); color: var(--white); }
+
 /* Crear accesos de coordinacion */
 .admin-new { margin-top: 18px; background: var(--light-soft); border-color: var(--orange); }
 .admin-form-row { margin-bottom: 14px; text-align: left; }
@@ -1787,6 +1799,7 @@ a.contact-item:hover .contact-arrow { transform: translateX(4px); color: var(--o
   .admin-stats { grid-template-columns: repeat(2, 1fr); }
   .admin-stats strong { font-size: 17px; }
   .category-grid { grid-template-columns: repeat(2, 1fr); }
+  .admin-backup-actions .button { min-width: 0; width: 100%; }
 }
 
 @media (max-width: 860px) {

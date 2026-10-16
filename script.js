@@ -859,6 +859,145 @@
   }
 
   /* ------------------------------------------------------------------
+     Respaldo de las cuentas: el coordinador descarga un archivo
+     con todas las cuentas y pagos, y lo restaura cuando lo necesite.
+     Sirve para no perder los datos al cambiar de equipo o al
+     borrar el historial del navegador.
+  ------------------------------------------------------------------ */
+  var backupDownload = $("#backup-download");
+  var backupRestore = $("#backup-restore");
+  var backupFile = $("#backup-file");
+  var backupStatus = $("#backup-status");
+  var backupDate = $("#admin-backup-date");
+  var BACKUP_DATE_KEY = "cvp_last_backup";
+
+  function marcarRespaldado() {
+    try { localStorage.setItem(BACKUP_DATE_KEY, new Date().toISOString()); } catch (e) {}
+    pintarFechaBackup();
+  }
+
+  function pintarFechaBackup() {
+    if (!backupDate) return;
+    var guardado = null;
+    try { guardado = localStorage.getItem(BACKUP_DATE_KEY); } catch (e) {}
+    if (!guardado) {
+      backupDate.textContent = "Nunca has descargado un respaldo";
+      return;
+    }
+    var fecha = new Date(guardado);
+    if (isNaN(fecha.getTime())) { backupDate.textContent = "Nunca has descargado un respaldo"; return; }
+    var opciones = { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" };
+    try {
+      backupDate.textContent = "Último respaldo: " + fecha.toLocaleDateString("es-CO", opciones);
+    } catch (e) {
+      backupDate.textContent = "Último respaldo: " + fecha.toLocaleString();
+    }
+  }
+
+  if (backupDownload) {
+    backupDownload.addEventListener("click", function () {
+      ensureAdmin();
+      var usuarios = getUsers();
+      var familias = usuarios.filter(function (u) { return u.role !== "admin"; });
+
+      var respaldo = {
+        tipo: "respaldo-cvp",
+        version: 1,
+        generado: new Date().toISOString(),
+        club: "Club de Voleibol Pensilvania",
+        totalCuentas: usuarios.length,
+        totalFamilias: familias.length,
+        totalPagado: familias.reduce(function (s, u) { return s + totalPagado(u); }, 0),
+        cuentas: usuarios
+      };
+
+      var texto = JSON.stringify(respaldo, null, 2);
+      var blob = new Blob([texto], { type: "application/json;charset=utf-8" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "respaldo-cvp-" + new Date().toISOString().slice(0, 10) + ".json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+
+      marcarRespaldado();
+      setStatus(backupStatus,
+        "Respaldo descargado: " + familias.length + " familias y " +
+        usuarios.length + " cuentas. Guardalo en un lugar seguro.", "is-success");
+    });
+  }
+
+  if (backupRestore && backupFile) {
+    backupRestore.addEventListener("click", function () {
+      backupFile.click();
+    });
+
+    backupFile.addEventListener("change", function () {
+      var archivo = backupFile.files && backupFile.files[0];
+      if (!archivo) return;
+
+      var lector = new FileReader();
+      lector.onload = function () {
+        var datos;
+        try {
+          datos = JSON.parse(lector.result);
+        } catch (e) {
+          setStatus(backupStatus, "Ese archivo no es un respaldo válido.", "is-error");
+          backupFile.value = "";
+          return;
+        }
+
+        if (!datos || datos.tipo !== "respaldo-cvp" || !Array.isArray(datos.cuentas)) {
+          setStatus(backupStatus, "El archivo no tiene el formato de un respaldo del club.", "is-error");
+          backupFile.value = "";
+          return;
+        }
+
+        var cuentas = datos.cuentas.filter(function (u) {
+          return u && u.email && u.pass;
+        });
+
+        if (!cuentas.length) {
+          setStatus(backupStatus, "El respaldo no contiene cuentas válidas.", "is-error");
+          backupFile.value = "";
+          return;
+        }
+
+        var actual = getUsers().filter(function (u) { return u.role !== "admin"; }).length;
+        var aviso = actual > 0
+          ? " Hay " + actual + " cuentas aqui. Al restaurar, SE REEMPLAZAN todas por las del archivo."
+          : "";
+
+        if (!window.confirm(
+          "Se restaurarán " + cuentas.length + " cuentas desde el respaldo " +
+          "(familias: " + (datos.totalFamilias || "—") + ")." + aviso +
+          "\n\n¿Continuar?"
+        )) {
+          backupFile.value = "";
+          return;
+        }
+
+        /* Se conservan los accesos de coordinacion que ya tenga en este equipo */
+        var adminsActuales = getUsers().filter(function (u) { return u.role === "admin"; });
+        var restauradas = cuentas.filter(function (u) { return u.role !== "admin"; });
+        var todas = restauradas.concat(adminsActuales);
+        ensureAdmin();
+        saveUsers(todas);
+
+        renderAdmin();
+        setStatus(backupStatus,
+          "Respaldo restaurado: " + restauradas.length + " familias recuperadas.", "is-success");
+        backupFile.value = "";
+      };
+      lector.readAsText(archivo);
+    });
+  }
+
+  pintarFechaBackup();
+
+  /* ------------------------------------------------------------------
      Crear una cuenta de coordinacion desde el panel
   ------------------------------------------------------------------ */
   var adminRegisterForm = $("#admin-register-form");

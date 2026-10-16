@@ -469,6 +469,21 @@
           <span class="dashboard-avatar">CVP</span>
         </div>
         <div class="admin-stats" id="admin-stats"></div>
+
+        <div class="dashboard-card admin-backup">
+          <div class="dashboard-panel-head">
+            <h3>Respaldo de las cuentas</h3>
+            <span id="admin-backup-date">Nunca has descargado un respaldo</span>
+          </div>
+          <p class="admin-backup-note">Los datos viven solo en este navegador. Si cambias de equipo o borras el historial, se pierden. Descarga el respaldo de vez en cuando.</p>
+          <div class="admin-backup-actions">
+            <button class="button button--dark" type="button" id="backup-download">Descargar respaldo</button>
+            <button class="button button--outline-dark" type="button" id="backup-restore">Restaurar respaldo</button>
+            <input type="file" id="backup-file" accept="application/json,.json" hidden>
+          </div>
+          <p class="form-status" id="backup-status" role="status" aria-live="polite"></p>
+        </div>
+
         <div class="dashboard-card">
           <div class="dashboard-panel-head">
             <h3>Cuentas registradas</h3>
