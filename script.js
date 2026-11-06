@@ -1137,16 +1137,16 @@
     });
   }
 
-  /* Cerrar sesion */
-  var logoutBtn = $("[data-logout]");
-  if (logoutBtn) {
+  /* Cerrar sesion (se aplica a todos los botones de cerrar sesion:
+     el del panel de familia y el del panel de coordinacion) */
+  $$("[data-logout]").forEach(function (logoutBtn) {
     logoutBtn.addEventListener("click", function () {
       clearSession();
       closeModal(portalModal);
       switchAuthView("login");
       setStatus(portalStatus, "Sesión cerrada. Vuelve pronto.", "is-success");
     });
-  }
+  });
 
   /* Descargar comprobante (dispositivo local) */
   $$(".download-button").forEach(function (btn) {
