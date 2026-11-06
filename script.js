@@ -393,6 +393,7 @@
   function renderAdmin() {
     if (!adminStats || !adminList) return;
     ensureAdmin();
+      ensureDemoFamily();
 
     var todos = getUsers();
     var familias = todos.filter(function (u) { return u.role !== "admin"; });
@@ -815,6 +816,7 @@
 
       var normalized = normalizeEmail(user.value);
       ensureAdmin();
+      ensureDemoFamily();
       var match = getUsers().find(function (u) {
         return u.email === normalized && u.pass === hashPassword(pass.value);
       });
@@ -840,6 +842,12 @@
   var ADMIN_EMAIL = "coordinacion@clubvoleibol.com";
   var ADMIN_PASS = "cvp2026";
 
+  /* Cuenta demo de una familia: permite mostrar el panel de una familia
+     sin tener que registrar una cuenta real. Se crea sola si no existe. */
+  var DEMO_FAMILY_EMAIL = "familia@demo.com";
+  var DEMO_FAMILY_PASS = "demo2026";
+  var DEMO_FAMILY_NAME = "Familia Demo";
+
   /* Se ejecuta antes de leer las cuentas, para que el acceso de
      coordinacion siempre exista aunque se haya limpiado el navegador */
   function ensureAdmin() {
@@ -855,6 +863,25 @@
       role: "admin",
       createdAt: new Date().toISOString(),
       payments: []
+    });
+    saveUsers(users);
+  }
+
+  /* Crea la cuenta demo de una familia si no existe, para que se pueda
+     mostrar el panel de una familia sin registrar una cuenta real. */
+  function ensureDemoFamily() {
+    var users = getUsers();
+    var yaExiste = users.some(function (u) {
+      return normalizeEmail(u.email) === DEMO_FAMILY_EMAIL;
+    });
+    if (yaExiste) return;
+    users.push({
+      name: DEMO_FAMILY_NAME,
+      email: DEMO_FAMILY_EMAIL,
+      pass: hashPassword(DEMO_FAMILY_PASS),
+      role: "familia",
+      createdAt: new Date().toISOString(),
+      payments: buildDemoPayments(DEMO_FAMILY_EMAIL)
     });
     saveUsers(users);
   }
@@ -898,6 +925,7 @@
   if (backupDownload) {
     backupDownload.addEventListener("click", function () {
       ensureAdmin();
+      ensureDemoFamily();
       var usuarios = getUsers();
       var familias = usuarios.filter(function (u) { return u.role !== "admin"; });
 
@@ -985,6 +1013,7 @@
         var restauradas = cuentas.filter(function (u) { return u.role !== "admin"; });
         var todas = restauradas.concat(adminsActuales);
         ensureAdmin();
+      ensureDemoFamily();
         saveUsers(todas);
 
         renderAdmin();
@@ -1083,6 +1112,28 @@
         if (botonMostrar) botonMostrar.textContent = "Ocultar";
       }
       if (usuario) usuario.focus();
+    });
+  }
+
+  /* Entrar directo a la cuenta demo de una familia */
+  var familyDemoFill = $("#family-demo-fill");
+  if (familyDemoFill) {
+    familyDemoFill.addEventListener("click", function () {
+      ensureDemoFamily();
+      var usuario = $("#portal-user");
+      var clave = $("#portal-password");
+      if (usuario) usuario.value = DEMO_FAMILY_EMAIL;
+      if (clave) {
+        clave.value = DEMO_FAMILY_PASS;
+        clave.type = "text";
+        var botonMostrar = $("#password-toggle");
+        if (botonMostrar) botonMostrar.textContent = "Ocultar";
+      }
+      if (usuario) usuario.focus();
+      /* Enviar el formulario para entrar directo */
+      if (portalForm) {
+        try { portalForm.requestSubmit(); } catch (e) { portalForm.submit(); }
+      }
     });
   }
 
